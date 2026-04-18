@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>냠냠팡팡 식습관 행동 분석 리포트</title>
+    <style>
+        :root {
+            --bg-page: #F5F7FB;
+            --bg-canvas: #FFFFFF;
+            --text-main: #0F172A;
+            --text-sub: #64748B;
+            --primary: #3B82F6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --purple: #8B5CF6;
+            --mint: #14B8A6;
+            --line: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #E2E8F0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Pretendard', sans-serif;
+            overflow: hidden;
+        }
+
+        /* 1024x1366 iPad Pro Vertical Mockup */
+        .mockup-container {
+            width: 1024px;
+            height: 1366px;
+            background-color: var(--bg-page);
+            position: relative;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border-radius: 40px;
+            border: 12px solid #1A1A1A;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Canvas Elements */
+        #reportCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Hidden data for Canvas usage */
+        #hidden-assets {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mockup-container">
+        <canvas id="reportCanvas"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('reportCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Setup Canvas Size (1024x1366)
+        canvas.width = 1024;
+        canvas.height = 1366;
+
+        const theme = {
+            blue: '#3B82F6',
+            green: '#22C55E',
+            yellow: '#F59E0B',
+            red: '#EF4444',
+            purple: '#8B5CF6',
+            mint: '#14B8A6',
+            dark: '#0F172A',
+            sub: '#64748B',
+            line: '#E2E8F0',
+            bg: '#F5F7FB',
+            white: '#FFFFFF'
+        };
+
+        function drawUI() {
+            // 1. Background
+            ctx.fillStyle = theme.bg;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Status Bar
+            ctx.fillStyle = theme.dark;
+            ctx.font = '600 20px sans-serif';
+            ctx.fillText('18:31', 48, 44);
+            
+            // Wifi icon
+            ctx.strokeStyle = theme.dark;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(920, 40, 12, Math.PI * 1.2, Math.PI * 1.8);
+            ctx.stroke();
+            // Battery icon
+            ctx.strokeRect(950, 32, 30, 16);
+            ctx.fillRect(952, 34, 18, 12);
+
+            // 3. Header
+            ctx.fillStyle = theme.dark;
+            ctx.font = '800 42px sans-serif';
+            ctx.fillText('식습관 리포트', 48, 110);
+            ctx.font = '500 20px sans-serif';
+            ctx.fillStyle = theme.sub;
+            ctx.fillText('서아의 2026.04.17(금) 저녁 식사 행동 분석', 48, 145);
+
+            // 4. Hero Summary Card
+            drawRoundedRect(ctx, 48, 180, 928, 200, 30, theme.white, true);
+            // Gradient for hero card
+            const grad = ctx.createLinearGradient(48, 180, 976, 380);
+            grad.addColorStop(0, 'rgba(59, 130, 246, 0.05)');
+            grad.addColorStop(1, 'rgba(139, 92, 246, 0.05)');
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            ctx.fillStyle = theme.dark;
+            ctx.font = '700 30px sans-serif';
+            ctx.fillText('"목표 채소 2종 섭취 성공 및', 88, 245);
+            ctx.fillText('안정적인 식사 리마인드가 확인되었습니다."', 88, 285);
+
+            // Badges in Hero
+            drawBadge(88, 315, '목표 음식 2/3 성공', theme.green);
+            drawBadge(320, 315, '씹기 안정성 양호', theme.blue);
+            drawBadge(530, 315, '후반 집중 저하 감지', theme.yellow);
+
+            // Reliability Score
+            ctx.textAlign = 'right';
+            ctx.fillStyle = theme.blue;
+            ctx.font = '900 64px sans-serif';
+            ctx.fillText('91%', 936, 270);
+            ctx.font = '700 18px sans-serif';
+            ctx.fillStyle = theme.sub;
+            ctx.fillText('리포트 신뢰도', 936, 300);
+            ctx.textAlign = 'left';
+
+            // 5. Food Analysis Card (Plate)
+            drawRoundedRect(ctx, 48, 404, 450, 480, 30, theme.white, true);
+            ctx.fillStyle = theme.dark;
+            ctx.font = '700 24px sans-serif';
+            ctx.fillText('음식별 섭취 분석', 80, 450);
+
+            // Draw Plate SVG-style
+            const px = 273, py = 580, pr = 120;
+            ctx.strokeStyle = theme.line;
+            ctx.lineWidth = 10;
+            ctx.beginPath();
+            ctx.arc(px, py, pr, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = '#F8FAFC';
+            ctx.fill();
+            
+            // Plate Dividers
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(px, py - pr); ctx.lineTo(px, py + pr);
+            ctx.moveTo(px - pr, py); ctx.lineTo(px, py);
+            ctx.stroke();
+
+            // Plate Labels
+            ctx.fillStyle = theme.sub;
+            ctx.font = '700 16px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('잡곡밥', px - 60, py - 40);
+            ctx.fillText('달걀찜', px - 60, py + 50);
+            ctx.fillText('소고기무국', px + 60, py + 5);
+            ctx.textAlign = 'left';
+
+            // Food Table
+            const ty = 730;
+            drawFoodRow(80, ty, theme.green, '잡곡밥', '충분히 먹음', '6회');
+            drawFoodRow(80, ty + 50, theme.blue, '목표 채소 2종', '달성 성공', '5회');
+            drawFoodRow(80, ty + 100, theme.red, '오이무침', '시도 후 중단', '1회');
+
+            // 6. Chewing Behavior Card
+            drawRoundedRect(ctx, 526, 404, 450, 480, 30, theme.white, true);
+            ctx.fillStyle = theme.dark;
+            ctx.font = '700 24px sans-serif';
+            ctx.fillText('씹기 행동 지표', 558, 450);
+
+            const gridX = 558, gridY = 480;
+            drawKpiBox(gridX, gridY, '4.8s', '평균 씹기 시간', theme.blue);
+            drawKpiBox(gridX + 210, gridY, '68%', '충분히 씹은 비율', theme.blue);
+            drawKpiBox(gridX, gridY + 160, '3회', '빠른 삼킴 의심', theme.red);
+            drawKpiBox(gridX + 210, gridY + 160, '18.4회', '한입당 씹기 횟수', theme.blue);
+
+            ctx.fillStyle = '#F1F5F9';
+            drawRoundedRect(ctx, 558, 800, 386, 60, 15, '#F1F5F9', false);
+            ctx.fillStyle = theme.sub;
+            ctx.font = '500 15px sans-serif';
+            ctx.fillText('초반 안정적이었으나 11분 이후 씹기 시간이', 575, 825);
+            ctx.fillText('단축되며 빠른 삼킴 빈도가 증가했습니다.', 575, 848);
+
+            // 7. Concentration Card (Timeline)
+            drawRoundedRect(ctx, 48, 908, 928, 260, 30, theme.white, true);
+            ctx.fillStyle = theme.dark;
+            ctx.font = '700 24px sans-serif';
+            ctx.fillText('식사 집중도 분석', 88, 955);
+            
+            // Graph
+            const gx = 88, gy = 1110, gw = 848, gh = 120;
+            ctx.strokeStyle = theme.line;
+            ctx.beginPath();
+            ctx.moveTo(gx, gy); ctx.lineTo(gx + gw, gy);
+            ctx.stroke();
+
+            // Draw Segmented Bars for Concentration
+            const segments = 24;
+            const segW = gw / segments;
+            for(let i=0; i<segments; i++) {
+                let h;
+                if(i < 12) h = 80 + Math.random() * 20; // High
+                else h = 80 - (i - 12) * 8; // Dropping
+                if(h < 15) h = 15;
+                
+                ctx.fillStyle = i < 12 ? theme.mint : theme.sub;
+                ctx.globalAlpha = i < 12 ? 1.0 : 0.4;
+                drawRoundedRect(ctx, gx + (i * segW) + 4, gy - h, segW - 8, h, 4, ctx.fillStyle, false);
+            }
+            ctx.globalAlpha = 1.0;
+
+            // Focus Drop Note
+            ctx.fillStyle = theme.red;
+            drawRoundedRect(ctx, 540, 985, 180, 34, 8, theme.red, false);
+            ctx.fillStyle = theme.white;
+            ctx.font = '800 14px sans-serif';
+            ctx.fillText('11분 이후 집중 저하', 560, 1007);
+
+            ctx.fillStyle = theme.sub;
+            ctx.font = '600 16px sans-serif';
+            ctx.fillText('식사 시작', gx, gy + 30);
+            ctx.textAlign = 'center';
+            ctx.fillText('11분 경과', gx + gw/2, gy + 30);
+            ctx.textAlign = 'right';
+            ctx.fillText('종료 (18분 40초)', gx + gw, gy + 30);
+            ctx.textAlign = 'left';
+
+            // 8. AI Feedback Box
+            drawRoundedRect(ctx, 48, 1192, 928, 126, 30, theme.dark, false);
+            ctx.fillStyle = theme.purple;
+            drawRoundedRect(ctx, 80, 1225, 60, 60, 15, theme.purple, false);
+            ctx.fillStyle = theme.white;
+            ctx.font = '30px sans-serif';
+            ctx.fillText('✨', 92, 1267);
+
+            ctx.font = '600 20px sans-serif';
+            ctx.fillStyle = '#CBD5E1';
+            ctx.fillText('AI 코칭:', 160, 1245);
+            ctx.font = '500 20px sans-serif';
+            ctx.fillStyle = theme.white;
+            ctx.fillText('서아는 초반 10분간 매우 안정적인 영양 섭취 리듬을 보였습니다. 다만 후반부', 160, 1275);
+            ctx.fillText('오이무침 거부 이후 집중력이 저하되었으니 다음엔 당근과 섞어 시도해보세요.', 160, 1302);
+        }
+
+        function drawRoundedRect(ctx, x, y, width, height, radius, color, shadow) {
+            if (shadow) {
+                ctx.shadowColor = 'rgba(0,0,0,0.05)';
+                ctx.shadowBlur = 20;
+                ctx.shadowOffsetY = 4;
+            }
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.arcTo(x + width, y, x + width, y + height, radius);
+            ctx.arcTo(x + width, y + height, x, y + height, radius);
+            ctx.arcTo(x, y + height, x, y, radius);
+            ctx.arcTo(x, y, x + width, y, radius);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
+        }
+
+        function drawBadge(x, y, text, color) {
+            const padding = 16;
+            ctx.font = '700 15px sans-serif';
+            const textWidth = ctx.measureText(text).width;
+            const bgWidth = textWidth + (padding * 2);
+            
+            ctx.fillStyle = color + '20'; // 20% opacity
+            drawRoundedRect(ctx, x, y, bgWidth, 34, 10, ctx.fillStyle, false);
+            
+            ctx.fillStyle = color;
+            ctx.fillText(text, x + padding, y + 23);
+        }
+
+        function drawFoodRow(x, y, color, name, status, count) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x + 10, y + 10, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = theme.dark;
+            ctx.font = '700 18px sans-serif';
+            ctx.fillText(name, x + 35, y + 17);
+            
+            ctx.textAlign = 'right';
+            ctx.fillStyle = color;
+            ctx.font = '800 16px sans-serif';
+            ctx.fillText(status, x + 380, y + 17);
+            ctx.fillStyle = theme.sub;
+            ctx.font = '600 14px sans-serif';
+            ctx.fillText(count, x + 380, y + 38);
+            ctx.textAlign = 'left';
+            
+            ctx.strokeStyle = theme.line;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(x, y + 45); ctx.lineTo(x + 380, y + 45);
+            ctx.stroke();
+        }
+
+        function drawKpiBox(x, y, val, label, color) {
+            drawRoundedRect(ctx, x, y, 185, 140, 20, '#F8FAFC', false);
+            ctx.textAlign = 'center';
+            ctx.fillStyle = color;
+            ctx.font = '800 36px sans-serif';
+            ctx.fillText(val, x + 92, y + 70);
+            ctx.fillStyle = theme.sub;
+            ctx.font = '600 16px sans-serif';
+            ctx.fillText(label, x + 92, y + 105);
+            ctx.textAlign = 'left';
+        }
+
+        // Initialize
+        window.onload = drawUI;
+    </script>
+</body>
+</html>

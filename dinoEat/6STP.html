@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>냠냠팡팡 STP 전략 분석</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Design System Presets */
+            --bg: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-pri: #111827;
+            --text-sec: #4B5563;
+            --border: #D1D5DB;
+            --main: #1F3A5F;
+            --sub: #2563EB;
+            --acc1: #22C55E;
+            --acc2: #F59E0B;
+            --radius: 16px;
+            --bw: 1.2px;
+            --shadow: 0 4px 16px rgba(17,24,39,0.04);
+            --margin: 56px;
+            --gap: 32px;
+            --padding: 24px;
+            --arrow-line: 1.5px solid #CBD5E1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #E5E7EB; /* 아웃코스 배경 */
+            font-family: 'Pretendard', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 800x800 Fixed Container */
+        .artboard {
+            width: 800px;
+            height: 800px;
+            background-color: var(--bg);
+            padding: var(--margin);
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Typography */
+        .title { font-size: 34px; font-weight: 700; color: var(--text-pri); margin: 0 0 8px 0; letter-spacing: -0.5px; }
+        .section { font-size: 24px; font-weight: 700; color: var(--text-pri); }
+        .step { font-size: 20px; font-weight: 600; color: var(--text-pri); }
+        .body-text { font-size: 15px; font-weight: 400; color: var(--text-sec); line-height: 1.5; }
+        .caption { font-size: 13px; font-weight: 400; color: var(--text-sec); }
+
+        .header-area {
+            margin-bottom: var(--gap);
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Card Style */
+        .card {
+            background-color: var(--surface);
+            border: var(--bw) solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--padding);
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+            align-items: center;
+        }
+
+        /* Left Side (Step Indicator) */
+        .card-left {
+            grid-column: span 3;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .step-letter {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        
+        .letter-S { color: var(--main); }
+        .letter-T { color: var(--sub); }
+        .letter-P { color: var(--acc1); }
+
+        /* Right Side (Content) */
+        .card-right {
+            grid-column: span 9;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-left: var(--bw) dashed var(--border);
+            padding-left: 20px;
+            height: 100%;
+            justify-content: center;
+        }
+
+        /* Visual Elements inside Cards */
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .box {
+            border: var(--bw) solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-pri);
+            background-color: var(--bg);
+        }
+
+        .box-highlight {
+            border-color: var(--sub);
+            color: var(--sub);
+            background-color: rgba(37, 99, 235, 0.04);
+        }
+
+        .arrow-right {
+            width: 24px;
+            height: 1px;
+            background-color: var(--border);
+            position: relative;
+        }
+        .arrow-right::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            border-left: 6px solid var(--border);
+        }
+
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 15px;
+            color: var(--text-sec);
+        }
+        .list-item::before {
+            content: '•';
+            color: var(--border);
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .highlight-text {
+            color: var(--acc2);
+            font-weight: 600;
+        }
+
+        /* Connecting Arrows Down */
+        .arrow-down-container {
+            display: flex;
+            justify-content: center;
+            height: 24px;
+        }
+        .arrow-down-line {
+            width: 0;
+            height: 100%;
+            border-left: var(--arrow-line);
+            position: relative;
+        }
+        .arrow-down-line::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -4.5px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 6px solid #CBD5E1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="artboard">
+        <!-- Header -->
+        <div class="header-area">
+            <div class="caption" style="margin-bottom: 4px; color: var(--main); font-weight: 600;">[ 그림 2 ]</div>
+            <h1 class="title">냠냠팡팡 STP 세일즈 전략</h1>
+            <p class="body-text">자녀 섭식 문제 해결을 위한 시장 접근 및 포지셔닝 분석</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content-area">
+            
+            <!-- S : Segmentation -->
+            <div class="card">
+                <div class="card-left">
+                    <div class="step-letter letter-S">S</div>
+                    <div class="step">시장 세분화</div>
+                    <div class="caption">Segmentation</div>
+                </div>
+                <div class="card-right">
+                    <div class="body-text" style="font-weight: 600; color: var(--main);">분석 대상 : 3~7세 아동 부모</div>
+                    <div class="flex-row">
+                        <div class="box">디지털 매체 친숙도</div>
+                        <div class="arrow-right"></div>
+                        <div class="box">가족 형태 <span class="caption">(맞벌이, 다자녀 등)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down-container"><div class="arrow-down-line"></div></div>
+
+            <!-- T : Targeting -->
+            <div class="card">
+                <div class="card-left">
+                    <div class="step-letter letter-T">T</div>
+                    <div class="step">표적 시장</div>
+                    <div class="caption">Targeting</div>
+                </div>
+                <div class="card-right">
+                    <div class="box box-highlight" style="display: inline-block; width: fit-content;">
+                        디지털 능숙 + 맞벌이·다자녀 부모
+                    </div>
+                    <div class="list-item">
+                        식사 및 식단 관리에 많은 <b>시간과 노력</b> 소요
+                    </div>
+                    <div class="list-item">
+                        자녀 식사 지도에 높은 <b>심리적/물리적 부담</b> 체감
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down-container"><div class="arrow-down-line"></div></div>
+
+            <!-- P : Positioning -->
+            <div class="card">
+                <div class="card-left">
+                    <div class="step-letter letter-P">P</div>
+                    <div class="step">포지셔닝</div>
+                    <div class="caption">Positioning</div>
+                </div>
+                <div class="card-right">
+                    <div class="body-text" style="font-weight: 600; color: var(--main); margin-bottom: 4px;">
+                        빠르고 편리한 아이 식사 지도 서비스
+                    </div>
+                    <div class="list-item">자녀의 <b>능동적인 식사 참여</b> 유도</div>
+                    <div class="list-item">자녀 식습관 데이터 <b>한눈에 파악</b></div>
+                    <div class="list-item">기존 수단(강압적 지도 등) 대비 <span class="highlight-text">독자적 위치 확보</span></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

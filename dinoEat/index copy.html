@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>AI 비전 게임 엔진의 기능 구조</title>
+<style>
+  :root {
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --border: #D1D5DB;
+    --border-light: #E5E7EB;
+    --main: #1F3A5F;
+    --sub: #2563EB;
+    --accent1: #22C55E;
+    --accent2: #F59E0B;
+    --arrow: #CBD5E1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    color: var(--text-primary);
+    padding: 40px 24px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .canvas {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1.2px solid var(--border);
+    padding: 36px 44px 28px;
+    box-shadow: 0 4px 16px rgba(17,24,39,0.04);
+    width: 100%;
+    max-width: 1240px;
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 22px;
+  }
+  .title-group .title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--main);
+    margin-bottom: 6px;
+    letter-spacing: -0.4px;
+  }
+  .title-group .caption {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .marker {
+    font-size: 11px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 100px;
+    background: #FAFBFC;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .grid-row {
+    display: grid;
+    grid-template-columns: 1fr 1.55fr 1fr;
+    column-gap: 28px;
+    position: relative;
+  }
+  .col-heads {
+    padding: 10px 0 12px;
+    border-bottom: 2px solid var(--main);
+  }
+  .col-head-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .col-head-cell .idx {
+    width: 22px; height: 22px;
+    background: var(--main);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .col-head-cell .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--main);
+  }
+  .col-head-cell .hint {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-left: 4px;
+    font-weight: 400;
+  }
+
+  .grid-row.data {
+    border-bottom: 1px solid var(--border-light);
+    padding: 26px 0;
+    align-items: center;
+  }
+  .grid-row.data.last { border-bottom: none; padding-bottom: 8px; }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    position: relative;
+    padding-top: 32px;
+    height: 100%;
+  }
+
+  .input-tag {
+    position: absolute;
+    top: 0;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 100px;
+    letter-spacing: 0.3px;
+    z-index: 10;
+  }
+  .input-tag.tap  { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+  .input-tag.hold { background: #ECFDF5; color: #15803D; border: 1px solid #A7F3D0; }
+  .input-tag.goal { background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D; }
+
+  .frame {
+    background: #fff;
+    border: 1.2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 230px;
+    aspect-ratio: 5/4;
+  }
+  .frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .frame.game img {
+    object-fit: contain;
+    background: #F3F7FB;
+  }
+  .frame.reward {
+    border: 2px solid var(--accent2);
+    box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.10);
+  }
+
+  .label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    letter-spacing: -0.2px;
+  }
+  .keyword {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.45;
+    max-width: 260px;
+  }
+
+  /* Inter-column arrow markers */
+  .flow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--arrow);
+    font-size: 14px;
+    font-weight: 400;
+    pointer-events: none;
+  }
+
+  /* Row 3 center dual matching */
+  .match-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+  .match-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    max-width: 130px;
+  }
+  .frame-sm {
+    background: #fff;
+    border: 1.2px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 1/1;
+  }
+  .frame-sm img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tiny {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .match-symbol {
+    font-size: 16px;
+    color: var(--sub);
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  /* Row-level accent color strip on the left of each behavior label */
+  .cell.behavior .label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: 2px;
+  }
+  .r1 .cell.behavior .label::before { background: var(--sub); }
+  .r2 .cell.behavior .label::before { background: var(--accent1); }
+  .r3 .cell.behavior .label::before { background: var(--accent2); }
+
+  /* Reward effect row */
+  .reward-effects {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .reward-effects .chip {
+    font-size: 11px;
+    color: #B45309;
+    background: #FEF3C7;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-weight: 600;
+    border: 1px solid #FDE68A;
+  }
+
+  /* Footer summary */
+  .foot {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .foot-msg {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .foot-msg .k { font-weight: 700; }
+  .foot-msg .k.b { color: var(--sub); }
+  .foot-msg .k.g { color: #15803D; }
+  .foot-msg .k.o { color: #B45309; }
+  .brand {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="head">
+    <div class="title-group">
+      <div class="title">AI 비전 게임 엔진의 기능 구조</div>
+      <div class="caption">아이의 실제 식사 행동 → AI 비전 실시간 인식 → 서로 다른 게임 입력으로 변환</div>
+    </div>
+    <div class="marker">NUMNUM-PANGPANG</div>
+  </div>
+
+  <!-- Column headers -->
+  <div class="grid-row col-heads">
+    <div class="col-head-cell"><span class="idx">1</span><span class="name">행동</span><span class="hint">실제 식사 동작</span></div>
+    <div class="col-head-cell"><span class="idx">2</span><span class="name">구현 방법</span><span class="hint">AI 비전 인식</span></div>
+    <div class="col-head-cell"><span class="idx">3</span><span class="name">게임 시스템</span><span class="hint">연결되는 반응</span></div>
+  </div>
+
+  <!-- Row 1: 일반 음식 먹기 -->
+  <div class="grid-row data r1">
+    <div class="cell behavior">
+      <span class="input-tag tap">단발 입력</span>
+      <div class="frame"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/아이_일반먹기.png" alt="일반 음식 먹기"></div>
+      <div class="label">일반 음식 먹기</div>
+    </div>
+    <div class="cell">
+      <div class="frame"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/아이_일반먹기_세그멘테이션.png" alt="음식 세그멘테이션"></div>
+      <div class="label">실시간 음식 인식</div>
+      <div class="keyword">식기 주변 음식 세그멘테이션으로 한 입 단위 감지</div>
+    </div>
+    <div class="cell">
+      <div class="frame game"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/게임_구슬추가.png" alt="구슬 추가"></div>
+      <div class="label">일반 구슬 추가</div>
+      <div class="keyword">공룡 배 속에 구슬이 하나씩 쌓임</div>
+    </div>
+  </div>
+
+  <!-- Row 2: 씹기 -->
+  <div class="grid-row data r2">
+    <div class="cell behavior">
+      <span class="input-tag hold">지속형 입력</span>
+      <div class="frame"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/아이_씹고있음.png" alt="씹기"></div>
+      <div class="label">씹기</div>
+    </div>
+    <div class="cell">
+      <div class="frame"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/아이_씹고있음_랜드마크.png" alt="랜드마크"></div>
+      <div class="label">턱·입 랜드마크 분석</div>
+      <div class="keyword">얼굴 랜드마크로 씹기 패턴을 실시간 추적</div>
+    </div>
+    <div class="cell">
+      <div class="frame game"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/게임_구슬병합.png" alt="구슬 병합"></div>
+      <div class="label">구슬 이동 · 병합</div>
+      <div class="keyword">씹을 때마다 배 속 구슬이 움직이고 합쳐짐</div>
+    </div>
+  </div>
+
+  <!-- Row 3: 채소 먹기 -->
+  <div class="grid-row data last r3">
+    <div class="cell behavior">
+      <span class="input-tag goal">목표 음식 입력</span>
+      <div class="frame"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/아이_채소먹기.png" alt="채소 먹기"></div>
+      <div class="label">채소 먹기</div>
+    </div>
+    <div class="cell">
+      <div class="match-group">
+        <div class="match-col">
+          <div class="frame-sm"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/식판_세그멘테이션.png" alt="식판 기준"></div>
+          <div class="tiny">식사 전<br>식판 기준 정보</div>
+        </div>
+        <div class="match-symbol">↔</div>
+        <div class="match-col">
+          <div class="frame-sm"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/아이_채소먹기_세그멘테이션.png" alt="식사 중 음식"></div>
+          <div class="tiny">식사 중<br>입 근처 음식</div>
+        </div>
+      </div>
+      <div class="label">목표 음식 매칭</div>
+      <div class="keyword">기준 벡터 ↔ 섭취 음식 유사도 비교로 목표 섭취 판별</div>
+    </div>
+    <div class="cell">
+      <div class="frame game reward"><img src="https://raw.githubusercontent.com/JunH1004/numnumpangpang_visual/main/images/게임_특수구슬.png" alt="특수 구슬"></div>
+      <div class="label">특수 구슬 · 폭발 · 별똥 포인트</div>
+      <div class="reward-effects">
+        <span class="chip">특수 구슬</span>
+        <span class="chip">기존 구슬 폭발</span>
+        <span class="chip">별똥 포인트</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="foot-msg">
+      <span class="k b">일반 음식</span>은 가벼운 누적, <span class="k g">씹기</span>는 지속적 조작감, <span class="k o">목표 음식</span>은 강한 보상 —
+      서로 다른 식사 행동이 서로 다른 게임 반응으로 연결된다.
+    </div>
+    <div class="brand">AI VISION · GAME ENGINE</div>
+  </div>
+
+</div>
+</body>
+</html>
