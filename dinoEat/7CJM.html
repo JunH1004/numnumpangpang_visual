@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>냠냠팡팡 고객 여정 지도</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-pri: #0F1A14;
+            --text-sec: #4B5563;
+            --text-ter: #9CA3AF;
+            --border: #E5E7EB;
+            --main: #0F1A14;
+            --sub: #16A34A;
+            --sub-light: #DCFCE7;
+            --sub-bg: #F0FDF4;
+            --acc-warm: #F59E0B;
+            --acc-warm-bg: #FFFBEB;
+            --acc-warm-border: #FDE68A;
+            --radius: 16px;
+            --shadow-sm: 0 1px 3px rgba(15,26,20,0.04);
+            --shadow-md: 0 4px 16px rgba(15,26,20,0.06);
+            --shadow-lg: 0 8px 32px rgba(15,26,20,0.08);
+            --margin: 36px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #E5E7EB;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            color: var(--text-pri);
+        }
+
+        .artboard {
+            width: 800px;
+            height: 800px;
+            background: var(--bg);
+            padding: var(--margin);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ── Header ── */
+        .header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--main);
+        }
+        .title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-pri);
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            font-size: 11px;
+            color: var(--text-sec);
+            font-weight: 500;
+        }
+
+        /* ── Stage Timeline ── */
+        .timeline {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        .stage-pill {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 0;
+            background: var(--main);
+            color: #fff;
+            font-size: 12.5px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+        .stage-pill:first-child { border-radius: 10px 0 0 10px; }
+        .stage-pill:last-child { border-radius: 0 10px 10px 0; }
+        .stage-num {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--sub);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ── Emotion Curve Section ── */
+        .emotion-section {
+            position: relative;
+            height: 100px;
+            margin-bottom: 12px;
+            background: var(--surface);
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            overflow: visible;
+            padding: 0 12px;
+        }
+        .emotion-section-label {
+            position: absolute;
+            top: 8px;
+            left: 14px;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--sub);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .emotion-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .emotion-bubble {
+            position: absolute;
+            transform: translateX(-50%);
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 4px 10px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-pri);
+            white-space: nowrap;
+            box-shadow: var(--shadow-sm);
+            line-height: 1.3;
+            text-align: center;
+        }
+        .emotion-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 8px;
+            height: 8px;
+            background: var(--surface);
+            border-right: 1.5px solid var(--border);
+            border-bottom: 1.5px solid var(--border);
+        }
+        .emotion-bubble.positive { border-color: var(--sub); }
+        .emotion-bubble.positive::after { border-color: var(--sub); }
+        .emotion-bubble.negative { border-color: #EF4444; }
+        .emotion-bubble.negative::after { border-color: #EF4444; }
+
+        /* ── Content Rows ── */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 0;
+        }
+
+        .content-row {
+            display: flex;
+            gap: 6px;
+            min-height: 0;
+        }
+
+        .row-label {
+            width: 46px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-sec);
+            letter-spacing: 2px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .row-cards {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 8px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--sub);
+            border-radius: 10px 10px 0 0;
+            opacity: 0;
+        }
+
+        /* Situation row */
+        .card.situation::before { opacity: 1; background: var(--sub); }
+        .card.situation .card-text { font-size: 11px; line-height: 1.4; color: var(--text-pri); word-break: keep-all; }
+        .card.situation .card-text b { font-weight: 800; color: var(--sub); }
+
+        /* Action row */
+        .card.action { background: var(--sub-bg); border-color: #BBF7D0; }
+        .card.action::before { opacity: 0; }
+        .card.action .card-text { font-size: 10.5px; line-height: 1.4; color: var(--text-pri); word-break: keep-all; }
+
+        /* Touchpoint row */
+        .card.touchpoint { background: var(--surface); border-color: var(--border); }
+        .tag-wrap { display: flex; flex-wrap: wrap; gap: 3px; }
+        .tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 20px;
+            line-height: 1.2;
+            word-break: keep-all;
+        }
+        .tag.green { background: var(--sub-light); color: #15803D; }
+        .tag.outline { background: transparent; border: 1px solid var(--border); color: var(--text-sec); }
+
+        /* Retention row */
+        .card.retention {
+            background: var(--acc-warm-bg);
+            border-color: var(--acc-warm-border);
+        }
+        .card.retention .card-text {
+            font-size: 10.5px;
+            line-height: 1.4;
+            color: #92400E;
+            font-weight: 600;
+            word-break: keep-all;
+        }
+        .card.retention.empty { opacity: 0.4; }
+
+        /* ── Bottom Funnel ── */
+        .funnel-bar {
+            margin-top: 12px;
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            height: 52px;
+        }
+        .funnel-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: var(--sub);
+            color: #fff;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);
+        }
+        .funnel-step:first-child {
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 0 50%);
+            border-radius: 10px 0 0 10px;
+        }
+        .funnel-step:last-child {
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%, 12px 50%);
+            border-radius: 0 10px 10px 0;
+        }
+        .funnel-step:nth-child(2) { background: #15803D; }
+        .funnel-step:nth-child(3) { background: #166534; }
+        .funnel-step:nth-child(4) { background: #14532D; }
+        .funnel-step:nth-child(5) { background: #052E16; }
+        .funnel-value {
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .funnel-label {
+            font-size: 9px;
+            opacity: 0.7;
+            font-weight: 500;
+            margin-top: 1px;
+        }
+    </style>
+</head>
+<body>
+<div class="artboard">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="title">냠냠팡팡 고객 여정 지도</div>
+        <div class="subtitle">Customer Journey Map</div>
+    </div>
+
+    <!-- Stage Timeline -->
+    <div class="timeline">
+        <div class="stage-pill"><span class="stage-num">1</span>문제 인식</div>
+        <div class="stage-pill"><span class="stage-num">2</span>서비스 발견</div>
+        <div class="stage-pill"><span class="stage-num">3</span>초기 사용</div>
+        <div class="stage-pill"><span class="stage-num">4</span>효과 체감</div>
+        <div class="stage-pill"><span class="stage-num">5</span>유료 전환</div>
+        <div class="stage-pill"><span class="stage-num">6</span>정착·추천</div>
+    </div>
+
+    <!-- Emotion Curve -->
+    <div class="emotion-section">
+        <div class="emotion-section-label">감정 흐름</div>
+        <!-- Bubbles positioned along curve -->
+        <div class="emotion-bubble negative" style="left: 8.3%; top: 48px;">"매끼 전쟁"<br>지침</div>
+        <div class="emotion-bubble negative" style="left: 25%; top: 38px;">반신반의</div>
+        <div class="emotion-bubble positive" style="left: 41.6%; top: 18px;">"스스로 먹는다!"<br>놀라움</div>
+        <div class="emotion-bubble positive" style="left: 58.3%; top: 6px;">데이터 신뢰</div>
+        <div class="emotion-bubble positive" style="left: 75%; top: 12px;">"값어치 한다"</div>
+        <div class="emotion-bubble positive" style="left: 91.6%; top: 4px;">"전쟁 끝!"<br>만족</div>
+
+        <svg class="emotion-svg" viewBox="0 0 728 100" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="curveGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#EF4444" stop-opacity="0.15"/>
+                    <stop offset="35%" stop-color="#F59E0B" stop-opacity="0.08"/>
+                    <stop offset="100%" stop-color="#16A34A" stop-opacity="0.12"/>
+                </linearGradient>
+                <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#EF4444"/>
+                    <stop offset="35%" stop-color="#F59E0B"/>
+                    <stop offset="100%" stop-color="#16A34A"/>
+                </linearGradient>
+            </defs>
+            <!-- Area fill -->
+            <path d="M60,82 C150,78 170,72 240,58 C310,44 340,28 420,22 C500,16 530,20 560,18 C590,16 640,12 668,10 L668,98 L60,98 Z"
+                  fill="url(#curveGrad)" />
+            <!-- Line -->
+            <path d="M60,82 C150,78 170,72 240,58 C310,44 340,28 420,22 C500,16 530,20 560,18 C590,16 640,12 668,10"
+                  fill="none" stroke="url(#lineGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Dots -->
+            <circle cx="60" cy="82" r="4" fill="#EF4444"/>
+            <circle cx="182" cy="66" r="4" fill="#F59E0B"/>
+            <circle cx="303" cy="36" r="4" fill="#16A34A"/>
+            <circle cx="425" cy="20" r="4" fill="#16A34A"/>
+            <circle cx="546" cy="22" r="4" fill="#16A34A"/>
+            <circle cx="668" cy="10" r="4" fill="#16A34A"/>
+        </svg>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+
+        <!-- Situation Row -->
+        <div class="content-row" style="flex: 1.1;">
+            <div class="row-label">상황</div>
+            <div class="row-cards">
+                <div class="card situation"><div class="card-text">매끼 반복되는<br><b>편식·식사 거부</b></div></div>
+                <div class="card situation"><div class="card-text">다른 부모의<br><b>비포·애프터 후기</b></div></div>
+                <div class="card situation"><div class="card-text">무료 게임을<br>식사에 <b>첫 적용</b></div></div>
+                <div class="card situation"><div class="card-text"><b>리포트</b>로 변화를<br><b>수치 확인</b></div></div>
+                <div class="card situation"><div class="card-text">다양한 게임과<br><b>심화 분석</b> 필요</div></div>
+                <div class="card situation"><div class="card-text">아이 식습관이<br><b>눈에 띄게 개선</b></div></div>
+            </div>
+        </div>
+
+        <!-- Action Row -->
+        <div class="content-row" style="flex: 1;">
+            <div class="row-label">행동</div>
+            <div class="row-cards">
+                <div class="card action"><div class="card-text">"아이 편식 해결"<br>검색·글 탐색</div></div>
+                <div class="card action"><div class="card-text">앱 다운로드<br>무료 게임 실행</div></div>
+                <div class="card action"><div class="card-text">식사마다 사용<br>아이 반응 관찰</div></div>
+                <div class="card action"><div class="card-text">목표 음식 설정<br>주간 리포트 확인</div></div>
+                <div class="card action"><div class="card-text">월 9,900원<br>프리미엄 결제</div></div>
+                <div class="card action"><div class="card-text">후기 작성<br>지인 추천</div></div>
+            </div>
+        </div>
+
+        <!-- Touchpoint Row -->
+        <div class="content-row" style="flex: 0.95;">
+            <div class="row-label">접점</div>
+            <div class="row-cards">
+                <div class="card touchpoint"><div class="tag-wrap"><span class="tag green">맘카페</span><span class="tag outline">블로그</span></div></div>
+                <div class="card touchpoint"><div class="tag-wrap"><span class="tag green">SNS 후기</span><span class="tag outline">앱스토어</span></div></div>
+                <div class="card touchpoint"><div class="tag-wrap"><span class="tag green">냠냠팡팡 앱</span></div></div>
+                <div class="card touchpoint"><div class="tag-wrap"><span class="tag green">식습관 리포트</span><span class="tag outline">푸시 알림</span></div></div>
+                <div class="card touchpoint"><div class="tag-wrap"><span class="tag green">구독 결제</span><span class="tag outline">프리미엄 혜택</span></div></div>
+                <div class="card touchpoint"><div class="tag-wrap"><span class="tag green">맘카페 후기</span><span class="tag outline">입소문</span></div></div>
+            </div>
+        </div>
+
+        <!-- Retention Row -->
+        <div class="content-row" style="flex: 0.95;">
+            <div class="row-label" style="color: #92400E;">이탈 방지</div>
+            <div class="row-cards">
+                <div class="card retention empty"><div class="card-text">—</div></div>
+                <div class="card retention"><div class="card-text">첫 게임 무료<br>즉시 시작</div></div>
+                <div class="card retention"><div class="card-text">온보딩 튜토리얼<br>첫 완료 보상</div></div>
+                <div class="card retention"><div class="card-text">주간 리포트<br>푸시 알림</div></div>
+                <div class="card retention"><div class="card-text">프리미엄 7일<br>무료 체험</div></div>
+                <div class="card retention"><div class="card-text">추천인 리워드<br>제공</div></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Funnel Bar -->
+    <div class="funnel-bar">
+        <div class="funnel-step">
+            <div class="funnel-value">SNS 바이럴</div>
+            <div class="funnel-label">인지</div>
+        </div>
+        <div class="funnel-step">
+            <div class="funnel-value">무료 체험</div>
+            <div class="funnel-label">시도</div>
+        </div>
+        <div class="funnel-step">
+            <div class="funnel-value">30일 체험</div>
+            <div class="funnel-label">검증</div>
+        </div>
+        <div class="funnel-step">
+            <div class="funnel-value">월 9,900원</div>
+            <div class="funnel-label">구독 전환</div>
+        </div>
+        <div class="funnel-step">
+            <div class="funnel-value">자발적 추천</div>
+            <div class="funnel-label">선순환</div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

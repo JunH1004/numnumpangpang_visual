@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>냠냠팡팡 TAM SAM SOM 산출</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-pri: #0F1A14;
+            --text-sec: #4B5563;
+            --text-soft: #6B7280;
+            --border: #D1D5DB;
+            --soft-border: #E5E7EB;
+            --accent: #16A34A;
+            --accent-deep: #15803D;
+            --accent-soft: #DCFCE7;
+            --accent-pale: #F0FDF4;
+            --radius: 16px;
+            --bw: 1.2px;
+            --shadow: 0 4px 16px rgba(15, 26, 20, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #E5E7EB;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-pri);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .artboard {
+            width: 800px;
+            height: 800px;
+            padding: 42px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .title {
+            font-size: 33px;
+            font-weight: 700;
+            line-height: 1.18;
+            letter-spacing: 0;
+            margin-bottom: 0;
+        }
+
+        .market-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .market-card {
+            min-height: 0;
+            background: var(--surface);
+            border: var(--bw) solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px;
+            display: grid;
+            grid-template-columns: 108px 1fr 170px;
+            gap: 14px;
+            align-items: stretch;
+            flex: 1;
+        }
+
+        /* --- TAM: 회색 톤 --- */
+        .market-card.tam .market-label {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
+        }
+        .market-card.tam .market-code {
+            color: #374151;
+        }
+        .market-card.tam .scope-label {
+            background: #F3F4F6;
+            color: #374151;
+        }
+        .market-card.tam .result {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
+        }
+        .market-card.tam .result-value {
+            color: #1F2937;
+        }
+        .market-card.tam .formula-chip {
+            background: #F3F4F6;
+            color: #374151;
+            border-color: #D1D5DB;
+        }
+        .market-card.tam .formula-op {
+            color: #9CA3AF;
+        }
+
+        /* --- SAM: 연초록 톤 --- */
+        .market-card.sam {
+            border-color: #B7E4C7;
+        }
+        .market-card.sam .market-label {
+            background: #F0FDF4;
+            border-color: #B7E4C7;
+        }
+        .market-card.sam .market-code {
+            color: #22C55E;
+        }
+        .market-card.sam .scope-label {
+            background: #F0FDF4;
+            color: #16A34A;
+        }
+        .market-card.sam .result {
+            background: #F0FDF4;
+            border-color: #B7E4C7;
+        }
+        .market-card.sam .result-value {
+            color: #16A34A;
+        }
+        .market-card.sam .formula-chip {
+            background: #F0FDF4;
+            color: #16A34A;
+            border-color: #BBF7D0;
+        }
+        .market-card.sam .formula-op {
+            color: #86EFAC;
+        }
+
+        /* --- SOM: 진초록 톤 --- */
+        .market-card.som {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.08);
+        }
+        .market-card.som .market-label {
+            background: #DCFCE7;
+            border-color: #16A34A;
+        }
+        .market-card.som .market-code {
+            color: #15803D;
+        }
+        .market-card.som .scope-label {
+            background: #DCFCE7;
+            color: #15803D;
+        }
+        .market-card.som .result {
+            background: #DCFCE7;
+            border-color: #16A34A;
+        }
+        .market-card.som .result-value {
+            color: #15803D;
+        }
+        .market-card.som .formula-chip {
+            background: #DCFCE7;
+            color: #15803D;
+            border-color: #86EFAC;
+        }
+        .market-card.som .formula-op {
+            color: #4ADE80;
+        }
+
+        .market-label {
+            border-radius: 12px;
+            background: #F9FAFB;
+            border: var(--bw) solid var(--soft-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 8px;
+        }
+
+        .market-code {
+            font-size: 25px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .market-name {
+            color: var(--text-soft);
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .market-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+            gap: 6px;
+        }
+
+        .scope-label {
+            width: fit-content;
+            padding: 5px 9px;
+            border-radius: 6px;
+            background: var(--accent-pale);
+            color: var(--accent-deep);
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .scope-title {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.32;
+            color: var(--text-pri);
+            word-break: keep-all;
+        }
+
+        /* 수식 칩 스타일 */
+        .formula-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .formula-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 9px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 700;
+            line-height: 1;
+            border: 1px solid;
+            white-space: nowrap;
+        }
+
+        .formula-op {
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .result {
+            border-radius: 12px;
+            background: #F9FAFB;
+            border: var(--bw) solid var(--soft-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 6px;
+            padding: 14px 10px;
+        }
+
+        .result-label {
+            color: var(--text-soft);
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .result-value {
+            color: var(--text-pri);
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.5px;
+        }
+
+        .result-unit {
+            color: var(--text-sec);
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .result-number {
+            display: inline-flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 3px;
+            white-space: nowrap;
+        }
+
+        .result-sub {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-soft);
+            line-height: 1.3;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .source {
+            margin-top: 14px;
+            padding: 12px 14px 0;
+            border-top: var(--bw) solid var(--border);
+            color: #9CA3AF;
+            font-size: 9.2px;
+            font-weight: 500;
+            line-height: 1.32;
+            text-align: left;
+            word-break: keep-all;
+        }
+
+        .source-line {
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="artboard">
+        <header class="header">
+            <h1 class="title">TAM · SAM · SOM 시장 규모 산출</h1>
+        </header>
+
+        <main class="market-stack">
+            <!-- TAM: 회색 -->
+            <section class="market-card tam" aria-label="TAM 산출">
+                <div class="market-label">
+                    <div class="market-code">TAM</div>
+                    <div class="market-name">전체 시장</div>
+                </div>
+                <div class="market-body">
+                    <div class="scope-label">글로벌 기준</div>
+                    <div class="scope-title">3~7세 아동 중 식사 갈등을 겪는 아동 대상 시장</div>
+                    <div class="formula-row">
+                        <span class="formula-chip">글로벌 3~7세 인구</span>
+                        <span class="formula-op">×</span>
+                        <span class="formula-chip">섭식 문제 비율</span>
+                        <span class="formula-op">×</span>
+                        <span class="formula-chip">ARPU</span>
+                    </div>
+                </div>
+                <div class="result">
+                    <div class="result-label">시장 규모</div>
+                    <div class="result-number"><span class="result-value">34.6</span><span class="result-unit">조 원</span></div>
+                    <div class="result-sub">글로벌 최대<br>유료 구독 가능 시장</div>
+                </div>
+            </section>
+
+            <!-- SAM: 연초록 -->
+            <section class="market-card sam" aria-label="SAM 산출">
+                <div class="market-label">
+                    <div class="market-code">SAM</div>
+                    <div class="market-name">유효 시장</div>
+                </div>
+                <div class="market-body">
+                    <div class="scope-label">국내 B2C 기준</div>
+                    <div class="scope-title">디지털 솔루션을 수용할 수 있는 부모층 대상 시장</div>
+                    <div class="formula-row">
+                        <span class="formula-chip">국내 3~7세 인구</span>
+                        <span class="formula-op">×</span>
+                        <span class="formula-chip">섭식 문제 비율</span>
+                        <span class="formula-op">×</span>
+                        <span class="formula-chip">디지털 수용률</span>
+                        <span class="formula-op">×</span>
+                        <span class="formula-chip">ARPU</span>
+                    </div>
+                </div>
+                <div class="result">
+                    <div class="result-label">시장 규모</div>
+                    <div class="result-number"><span class="result-value">527</span><span class="result-unit">억 원</span></div>
+                    <div class="result-sub">국내 디지털 수용<br>부모 대상 시장</div>
+                </div>
+            </section>
+
+            <!-- SOM: 진초록 -->
+            <section class="market-card som" aria-label="SOM 산출">
+                <div class="market-label">
+                    <div class="market-code">SOM</div>
+                    <div class="market-name">수익 시장</div>
+                </div>
+                <div class="market-body">
+                    <div class="scope-label">2028년 목표 기준</div>
+                    <div class="scope-title">서비스 도달 사용자 중 실제 유료 구독 전환층</div>
+                    <div class="formula-row">
+                        <span class="formula-chip">초기 3년 목표 고객</span>
+                        <span class="formula-op">×</span>
+                        <span class="formula-chip">유료 전환 비율</span>
+                        <span class="formula-op">×</span>
+                        <span class="formula-chip">ARPU</span>
+                    </div>
+                </div>
+                <div class="result">
+                    <div class="result-label">시장 규모</div>
+                    <div class="result-number"><span class="result-value">32.3</span><span class="result-unit">억 원</span></div>
+                    <div class="result-sub">B2C 구독 매출<br>기준 시장</div>
+                </div>
+            </section>
+        </main>
+
+        <div class="source">
+            <div class="source-line">The World Bank, "Population ages 0-14 (% of total population)," World Development Indicators, based on United Nations Population Division, World Population Prospects.</div>
+            <div class="source-line">통계청, 「2023년 출생 통계」, 2024.08.28.</div>
+            <div class="source-line">Han, Y.-H., Shin, S., Woo, E. Y., Park, H.-K., Hyun, T., "Screen time, mealtime media use, and dietary behaviors in Korean preschoolers: a cross-sectional study," Korean Journal of Community Nutrition, 28(3), 206-219, 2023.</div>
+            <div class="source-line">한국언론진흥재단, 「2023 어린이 미디어 이용 조사」, 2023.12.31.</div>
+        </div>
+    </div>
+</body>
+</html>

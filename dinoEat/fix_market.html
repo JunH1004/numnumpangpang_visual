@@ -223,6 +223,15 @@
             font-size: 14px;
             text-align: center;
         }
+
+        /* 2번 카드 보완용 스타일 */
+        .insight-box {
+            margin-top: auto;
+            padding: 16px;
+            background-color: #F9FAFB;
+            border-radius: 12px;
+            border: 1px dashed var(--border);
+        }
     </style>
 </head>
 <body>
@@ -265,7 +274,7 @@
 
             <div class="card">
                 <div class="section-title">디지털 육아 솔루션 수요</div>
-                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
                     <div class="pie-chart">
                         <div class="pie-inner-text">72%</div>
                     </div>
@@ -274,12 +283,15 @@
                         매주 최소 1개 이상의<br>육아 앱을 <span style="color:var(--sub); font-weight: 700;">필수 활용 중</span>
                     </div>
                 </div>
-                <div style="border-top: 1px solid var(--bg); padding-top: 12px; display: flex; justify-content: space-between; align-items: flex-end;">
-                    <div>
-                        <div class="caption">월평균 양육비 (국내)</div>
-                        <div class="stat-num">80.7<span style="font-size:16px;">만 원</span></div>
+                
+                <div class="insight-box">
+                    <div class="caption" style="font-weight: 700; color: var(--main); margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
+                        <span style="color: var(--sub);">●</span> 핵심 니즈 분석 (Needs)
                     </div>
-                    <div class="caption" style="padding-bottom: 4px;">*자녀 1인당 기준</div>
+                    <div class="body-text" style="font-size: 13px; line-height: 1.6;">
+                        • <b>VIB(Very Important Baby)</b> 트렌드 확산<br>
+                        • 자녀의 <b>올바른 습관 형성</b>을 위한 도구 필요
+                    </div>
                 </div>
             </div>
         </div>

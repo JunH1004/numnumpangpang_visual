@@ -2,73 +2,62 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>그림2 식습관 분석 리포트</title>
+<title>식습관 분석 리포트</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{width:1280px;height:920px;overflow:hidden;background:#F7F8FA;font-family:'Noto Sans KR',sans-serif;color:#111827;}
-  .page{width:1280px;height:920px;padding:36px 56px 28px;display:flex;flex-direction:column;}
-  .fig-title{font-size:15px;font-weight:700;color:#1F3A5F;line-height:1.2;}
+  html,body{width:1280px;height:660px;overflow:hidden;background:#FFFFFF;font-family:'Noto Sans KR',sans-serif;color:#0F1A14;}
+  .page{width:1280px;height:660px;padding:32px 56px 18px;display:flex;flex-direction:column;}
+  .fig-title{text-align:center;font-size:34px;font-weight:700;color:#0F1A14;line-height:1.2;letter-spacing:0;margin-bottom:18px;}
   .fig-title span{color:#4B5563;font-weight:500;}
-  .fig-sub{margin-top:4px;margin-bottom:20px;font-size:13px;color:#6B7280;}
+  .fig-sub{max-width:920px;margin:8px auto 16px;font-size:15px;line-height:1.6;color:#6B7280;text-align:center;}
 
   .main{flex:1;display:flex;gap:0;min-height:0;position:relative;}
 
   /* DEVICE */
-  .device-col{width:430px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;}
-  .device-wrap{position:relative;width:370px;}
+  .device-col{width:470px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;}
+  .device-wrap{position:relative;width:410px;}
   .device-frame{
-    width:370px;background:#fff;
-    border:1.2px solid #C9CDD4;border-radius:26px;
+    width:410px;background:#fff;
+    border:1.2px solid #D1D5DB;border-radius:26px;
     padding:7px;
-    box-shadow:0 4px 20px rgba(17,24,39,0.06);
+    box-shadow:0 4px 16px rgba(15,26,20,0.04);
   }
   .device-inner{border-radius:20px;overflow:hidden;background:#F5F7FB;aspect-ratio:1024/1366;}
   .device-inner canvas{width:100%;height:100%;display:block;}
-  .device-caption{margin-top:8px;font-size:11px;color:#9CA3AF;text-align:center;}
 
   /* SVG connector layer */
   #connSvg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;overflow:visible;}
   .conn-num-text{font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:700;fill:#fff;dominant-baseline:central;text-anchor:middle;}
 
   /* ANNOTATIONS */
-  .annot-col{flex:1;display:flex;flex-direction:column;padding-left:72px;gap:7px;}
+  .annot-col{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding-left:60px;gap:0;}
   .ai{
     display:flex;align-items:flex-start;gap:10px;
     padding:10px 14px;
-    background:#fff;border:1.2px solid #E5E7EB;border-radius:10px;
-    box-shadow:0 2px 6px rgba(17,24,39,0.02);
+    background:#FFFFFF;border:1.2px solid #D1D5DB;border-radius:12px;
+    box-shadow:0 4px 16px rgba(15,26,20,0.04);
   }
   .an{
     width:22px;height:22px;border-radius:6px;flex-shrink:0;
     display:flex;align-items:center;justify-content:center;
     font-size:10px;font-weight:700;color:#fff;margin-top:1px;
   }
-  .c1{background:#2563EB;}.c2{background:#16A34A;}.c3{background:#0D9488;}.c4{background:#D97706;}.c5{background:#7C3AED;}
+  .c1{background:#166534;}.c2{background:#16A34A;}.c3{background:#22C55E;}.c4{background:#15803D;}.c5{background:#0F766E;}
   .ab{flex:1;min-width:0;}
-  .ab h4{font-size:13.5px;font-weight:700;color:#111827;line-height:1.3;letter-spacing:-0.02em;margin-bottom:1px;}
+  .ab h4{font-size:13.5px;font-weight:700;color:#0F1A14;line-height:1.3;letter-spacing:-0.02em;margin-bottom:1px;}
   .ab p{font-size:12px;color:#4B5563;line-height:1.5;}
-  .ab p strong{color:#1F3A5F;font-weight:600;}
+  .ab p strong{color:#166534;font-weight:600;}
   .ks{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;}
   .k{padding:2px 7px;border-radius:4px;background:#F3F4F6;font-size:10.5px;font-weight:600;color:#374151;white-space:nowrap;}
   .k em{font-style:normal;font-weight:700;}
-  .k.g em{color:#16A34A;}.k.b em{color:#2563EB;}.k.r em{color:#DC2626;}.k.a em{color:#D97706;}
+  .k.g em{color:#16A34A;}.k.b em{color:#166534;}.k.r em{color:#DC2626;}.k.a em{color:#D97706;}
 
-  /* FLOW */
-  .flow{margin-top:14px;display:flex;align-items:center;justify-content:center;}
-  .fs{display:flex;align-items:center;gap:7px;padding:7px 16px;background:#fff;border:1.2px solid #D1D5DB;font-size:12px;font-weight:600;color:#374151;white-space:nowrap;}
-  .fs:first-child{border-radius:8px 0 0 8px;}
-  .fs:last-child{border-radius:0 8px 8px 0;border-color:#1F3A5F;color:#1F3A5F;font-weight:700;}
-  .fs+.fs{border-left:none;}
-  .fi{font-size:14px;line-height:1;}
-  .fa{width:24px;height:0;border-top:1.2px solid #CBD5E1;position:relative;flex-shrink:0;}
-  .fa::after{content:'';position:absolute;right:-1px;top:-3.5px;border:3.5px solid transparent;border-left:5px solid #CBD5E1;}
 </style>
 </head>
 <body>
 <div class="page">
-  <div class="fig-title">그림 2. 식습관 분석 리포트 <span>— 화면 구성 및 데이터 흐름</span></div>
-  <div class="fig-sub">게임 중 수집된 영상 데이터를 AI가 자동 분석 → 식사 시간·섭취량·씹기 습관·집중도를 리포트로 정리·제공</div>
+  <div class="fig-title">식습관 분석 리포트 <span>— 화면 구성 및 데이터 흐름</span></div>
 
   <div class="main" id="mainArea">
     <div class="device-col">
@@ -77,7 +66,6 @@
           <div class="device-inner" id="deviceInner"><canvas id="rc"></canvas></div>
         </div>
       </div>
-      <div class="device-caption">리포트 화면 예시 — 서아, 2026.04.17 저녁</div>
     </div>
 
     <svg id="connSvg"></svg>
@@ -96,9 +84,9 @@
       </div></div>
 
       <div class="ai" data-i="2"><div class="an c3">3</div><div class="ab">
-        <h4>씹기 행동 지표</h4>
-        <p>MediaPipe 얼굴 랜드마크 <strong>입 좌표 변화량</strong>에서 씹기 횟수·속도·시간을 <strong>4가지 지표</strong>로 제시</p>
-        <div class="ks"><div class="k b"><em>4.8s</em> 평균 씹기</div><div class="k b"><em>68%</em> 충분 비율</div><div class="k r"><em>3회</em> 빠른 삼킴</div></div>
+        <h4>맞춤 식단 추천 · 광고</h4>
+        <p>분석된 영양 데이터 기반 <strong>다음 식사 메뉴를 자동 추천</strong>, 맞춤형 <strong>밀키트·식재료 광고</strong> 영역 제공</p>
+        <div class="ks"><div class="k g"><em>AI</em> 영양 매칭</div><div class="k b"><em>밀키트</em> 맞춤 추천</div></div>
       </div></div>
 
       <div class="ai" data-i="3"><div class="an c4">4</div><div class="ab">
@@ -108,17 +96,11 @@
       </div></div>
 
       <div class="ai" data-i="4"><div class="an c5">5</div><div class="ab">
-        <h4>AI 코칭 · 다음 식사 제안</h4>
-        <p>수집 데이터 종합 → <strong>긍정 강화 + 개선 행동 자동 생성</strong>, 다음 식사 추천 제공</p>
+        <h4>이번 주 식습관 트렌드</h4>
+        <p>최근 7일간 식사 데이터를 종합하여 <strong>주간 식습관 변화 추이</strong>를 한눈에 시각화</p>
+        <div class="ks"><div class="k g"><em>↑12%</em> 채소 섭취</div><div class="k b"><em>5/7</em> 목표 달성</div></div>
       </div></div>
     </div>
-  </div>
-
-  <div class="flow">
-    <div class="fs"><span class="fi">📸</span> 식전 촬영·세그멘테이션</div><div class="fa"></div>
-    <div class="fs"><span class="fi">🎮</span> 게임 진행 중 영상 수집</div><div class="fa"></div>
-    <div class="fs"><span class="fi">🤖</span> AI 행동 분석·추론</div><div class="fa"></div>
-    <div class="fs"><span class="fi">📊</span> 리포트 생성·제공</div>
   </div>
 </div>
 
@@ -130,35 +112,109 @@ const T={bl:'#3B82F6',gn:'#22C55E',yl:'#F59E0B',rd:'#EF4444',pr:'#8B5CF6',mt:'#1
 function RR(cx,px,py,pw,ph,pr,col,sh){if(sh){cx.shadowColor='rgba(0,0,0,0.05)';cx.shadowBlur=20;cx.shadowOffsetY=4;}cx.beginPath();cx.moveTo(px+pr,py);cx.arcTo(px+pw,py,px+pw,py+ph,pr);cx.arcTo(px+pw,py+ph,px,py+ph,pr);cx.arcTo(px,py+ph,px,py,pr);cx.arcTo(px,py,px+pw,py,pr);cx.closePath();cx.fillStyle=col;cx.fill();cx.shadowColor='transparent';cx.shadowBlur=0;cx.shadowOffsetY=0;}
 function bdg(bx,by,bt,bc){ctx.font='700 15px sans-serif';const tw=ctx.measureText(bt).width;ctx.fillStyle=bc+'20';RR(ctx,bx,by,tw+32,34,10,ctx.fillStyle,false);ctx.fillStyle=bc;ctx.fillText(bt,bx+16,by+23);}
 function fr(fx,fy,fc,fn,fs,fk){ctx.fillStyle=fc;ctx.beginPath();ctx.arc(fx+10,fy+10,8,0,Math.PI*2);ctx.fill();ctx.fillStyle=T.dk;ctx.font='700 18px sans-serif';ctx.fillText(fn,fx+35,fy+17);ctx.textAlign='right';ctx.fillStyle=fc;ctx.font='800 16px sans-serif';ctx.fillText(fs,fx+380,fy+17);ctx.fillStyle=T.sb;ctx.font='600 14px sans-serif';ctx.fillText(fk,fx+380,fy+38);ctx.textAlign='left';ctx.strokeStyle=T.ln;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(fx,fy+45);ctx.lineTo(fx+380,fy+45);ctx.stroke();}
-function kp(kx,ky,kv,kl,kc){RR(ctx,kx,ky,185,140,20,'#F8FAFC',false);ctx.textAlign='center';ctx.fillStyle=kc;ctx.font='800 36px sans-serif';ctx.fillText(kv,kx+92,ky+70);ctx.fillStyle=T.sb;ctx.font='600 16px sans-serif';ctx.fillText(kl,kx+92,ky+105);ctx.textAlign='left';}
+
 (function(){
   ctx.fillStyle=T.bg;ctx.fillRect(0,0,1024,1366);
+
+  /* Status bar — time only, NO wifi/battery */
   ctx.fillStyle=T.dk;ctx.font='600 20px sans-serif';ctx.fillText('18:31',48,44);
-  ctx.strokeStyle=T.dk;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(920,40,12,Math.PI*1.2,Math.PI*1.8);ctx.stroke();ctx.strokeRect(950,32,30,16);ctx.fillRect(952,34,18,12);
+
+  /* Title */
   ctx.fillStyle=T.dk;ctx.font='800 42px sans-serif';ctx.fillText('식습관 리포트',48,110);
   ctx.font='500 20px sans-serif';ctx.fillStyle=T.sb;ctx.fillText('서아의 2026.04.17(금) 저녁 식사 행동 분석',48,145);
+
+  /* ===== Section 1: Summary ===== */
   RR(ctx,48,180,928,200,30,T.wh,true);
-  ctx.fillStyle=T.dk;ctx.font='700 30px sans-serif';ctx.fillText('"목표 채소 2종 섭취 성공 및',88,245);ctx.fillText('안정적인 식사 리마인드가 확인되었습니다."',88,285);
+  ctx.fillStyle=T.dk;ctx.font='700 30px sans-serif';
+  ctx.fillText('"목표 채소 2종 섭취 성공 및',88,245);
+  ctx.fillText('안정적인 식사 리마인드가 확인되었습니다."',88,285);
   bdg(88,315,'목표 음식 2/3 성공',T.gn);bdg(320,315,'씹기 안정성 양호',T.bl);bdg(530,315,'후반 집중 저하 감지',T.yl);
-  ctx.textAlign='right';ctx.fillStyle=T.bl;ctx.font='900 64px sans-serif';ctx.fillText('91%',936,270);ctx.font='700 18px sans-serif';ctx.fillStyle=T.sb;ctx.fillText('리포트 신뢰도',936,300);ctx.textAlign='left';
-  RR(ctx,48,404,450,480,30,T.wh,true);ctx.fillStyle=T.dk;ctx.font='700 24px sans-serif';ctx.fillText('음식별 섭취 분석',80,450);
-  const p2=273,p3=580,p4=120;ctx.strokeStyle=T.ln;ctx.lineWidth=10;ctx.beginPath();ctx.arc(p2,p3,p4,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#F8FAFC';ctx.fill();
+  ctx.textAlign='right';ctx.fillStyle=T.bl;ctx.font='900 64px sans-serif';ctx.fillText('91%',936,270);
+  ctx.font='700 18px sans-serif';ctx.fillStyle=T.sb;ctx.fillText('리포트 신뢰도',936,300);ctx.textAlign='left';
+
+  /* ===== Section 2: Food Analysis (left card) ===== */
+  RR(ctx,48,404,450,480,30,T.wh,true);
+  ctx.fillStyle=T.dk;ctx.font='700 24px sans-serif';ctx.fillText('음식별 섭취 분석',80,450);
+  const p2=273,p3=580,p4=120;
+  ctx.strokeStyle=T.ln;ctx.lineWidth=10;ctx.beginPath();ctx.arc(p2,p3,p4,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#F8FAFC';ctx.fill();
   ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(p2,p3-p4);ctx.lineTo(p2,p3+p4);ctx.moveTo(p2-p4,p3);ctx.lineTo(p2,p3);ctx.stroke();
-  ctx.fillStyle=T.sb;ctx.font='700 16px sans-serif';ctx.textAlign='center';ctx.fillText('잡곡밥',p2-60,p3-40);ctx.fillText('달걀찜',p2-60,p3+50);ctx.fillText('소고기무국',p2+60,p3+5);ctx.textAlign='left';
-  fr(80,730,T.gn,'잡곡밥','충분히 먹음','6회');fr(80,780,T.bl,'목표 채소 2종','달성 성공','5회');fr(80,830,T.rd,'오이무침','시도 후 중단','1회');
-  RR(ctx,526,404,450,480,30,T.wh,true);ctx.fillStyle=T.dk;ctx.font='700 24px sans-serif';ctx.fillText('씹기 행동 지표',558,450);
-  kp(558,480,'4.8s','평균 씹기 시간',T.bl);kp(768,480,'68%','충분히 씹은 비율',T.bl);kp(558,640,'3회','빠른 삼킴 의심',T.rd);kp(768,640,'18.4회','한입당 씹기 횟수',T.bl);
-  RR(ctx,558,800,386,60,15,'#F1F5F9',false);ctx.fillStyle=T.sb;ctx.font='500 15px sans-serif';ctx.fillText('초반 안정적이었으나 11분 이후 씹기 시간이',575,825);ctx.fillText('단축되며 빠른 삼킴 빈도가 증가했습니다.',575,848);
-  RR(ctx,48,908,928,260,30,T.wh,true);ctx.fillStyle=T.dk;ctx.font='700 24px sans-serif';ctx.fillText('식사 집중도 분석',88,955);
-  const gx=88,gy=1110,gw=848;ctx.strokeStyle=T.ln;ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+gw,gy);ctx.stroke();
-  for(let i=0;i<24;i++){let h=i<12?80+Math.sin(i*.5)*15:Math.max(80-(i-12)*8,15);ctx.fillStyle=i<12?T.mt:T.sb;ctx.globalAlpha=i<12?1:.4;RR(ctx,gx+i*(gw/24)+4,gy-h,(gw/24)-8,h,4,ctx.fillStyle,false);}
+  ctx.fillStyle=T.sb;ctx.font='700 16px sans-serif';ctx.textAlign='center';
+  ctx.fillText('잡곡밥',p2-60,p3-40);ctx.fillText('달걀찜',p2-60,p3+50);ctx.fillText('소고기무국',p2+60,p3+5);ctx.textAlign='left';
+  fr(80,730,T.gn,'잡곡밥','충분히 먹음','6회');
+  fr(80,780,T.bl,'목표 채소 2종','달성 성공','5회');
+  fr(80,830,T.rd,'오이무침','시도 후 중단','1회');
+
+  /* ===== Section 3: Meal Recommendation & Ad (right card) ===== */
+  RR(ctx,526,404,450,480,30,T.wh,true);
+  ctx.fillStyle=T.dk;ctx.font='700 24px sans-serif';ctx.fillText('맞춤 식단 추천',558,450);
+  ctx.fillStyle=T.sb;ctx.font='500 16px sans-serif';ctx.fillText('서아의 영양 밸런스에 맞춘 추천',558,478);
+
+  /* Recommended menu card */
+  RR(ctx,558,500,386,150,15,'#F0FDF4',false);
+  ctx.strokeStyle='#BBF7D0';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(573,500);ctx.arcTo(944,500,944,650,15);ctx.arcTo(944,650,558,650,15);ctx.arcTo(558,650,558,500,15);ctx.arcTo(558,500,944,500,15);ctx.closePath();ctx.stroke();
+
+  ctx.fillStyle='#166534';ctx.font='700 18px sans-serif';ctx.fillText('📋  내일 저녁 추천 메뉴',578,535);
+  ctx.fillStyle=T.dk;ctx.font='500 16px sans-serif';
+  ctx.fillText('• 닭가슴살 채소볶음 (단백질 보충)',578,568);
+  ctx.fillText('• 미역 된장국 (무기질·식이섬유)',578,595);
+  ctx.fillText('• 당근·브로콜리 사이드 (비타민 A)',578,622);
+
+  /* Meal kit ad banner */
+  RR(ctx,558,670,386,120,15,'#F8FAFC',false);
+  ctx.strokeStyle='#D1D5DB';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(573,670);ctx.arcTo(944,670,944,790,15);ctx.arcTo(944,790,558,790,15);ctx.arcTo(558,790,558,670,15);ctx.arcTo(558,670,944,670,15);ctx.closePath();ctx.stroke();
+  ctx.fillStyle='#166534';ctx.font='700 20px sans-serif';ctx.fillText('🥗  오가닉 키즈 밀키트',578,706);
+  ctx.fillStyle=T.dk;ctx.font='500 15px sans-serif';
+  ctx.fillText('서아 맞춤 영양 밸런스 밀키트 구성',578,733);
+  ctx.fillStyle=T.sb;ctx.font='600 14px sans-serif';
+  ctx.fillText('첫 주문 30% 할인  |  주 2회 정기배송 가능',578,758);
+
+  /* CTA button */
+  RR(ctx,558,808,150,40,10,'#16A34A',false);
+  ctx.fillStyle='#fff';ctx.font='700 15px sans-serif';ctx.fillText('자세히 보기 →',575,834);
+
+  /* ===== Section 4: Concentration Timeline ===== */
+  RR(ctx,48,908,928,260,30,T.wh,true);
+  ctx.fillStyle=T.dk;ctx.font='700 24px sans-serif';ctx.fillText('식사 집중도 분석',88,955);
+  const gx=88,gy=1110,gw=848;
+  ctx.strokeStyle=T.ln;ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+gw,gy);ctx.stroke();
+  for(let i=0;i<24;i++){
+    let h=i<12?80+Math.sin(i*.5)*15:Math.max(80-(i-12)*8,15);
+    ctx.fillStyle=i<12?T.mt:T.sb;ctx.globalAlpha=i<12?1:.4;
+    RR(ctx,gx+i*(gw/24)+4,gy-h,(gw/24)-8,h,4,ctx.fillStyle,false);
+  }
   ctx.globalAlpha=1;
-  RR(ctx,540,985,180,34,8,T.rd,false);ctx.fillStyle=T.wh;ctx.font='800 14px sans-serif';ctx.fillText('11분 이후 집중 저하',560,1007);
-  ctx.fillStyle=T.sb;ctx.font='600 16px sans-serif';ctx.fillText('식사 시작',gx,gy+30);ctx.textAlign='center';ctx.fillText('11분 경과',gx+gw/2,gy+30);ctx.textAlign='right';ctx.fillText('종료 (18분 40초)',gx+gw,gy+30);ctx.textAlign='left';
-  RR(ctx,48,1192,928,126,30,T.dk,false);RR(ctx,80,1225,60,60,15,T.pr,false);ctx.fillStyle=T.wh;ctx.font='30px sans-serif';ctx.fillText('✨',92,1267);
-  ctx.font='600 20px sans-serif';ctx.fillStyle='#CBD5E1';ctx.fillText('AI 코칭:',160,1245);ctx.font='500 20px sans-serif';ctx.fillStyle=T.wh;
-  ctx.fillText('서아는 초반 10분간 매우 안정적인 영양 섭취 리듬을 보였습니다. 다만 후반부',160,1275);
-  ctx.fillText('오이무침 거부 이후 집중력이 저하되었으니 다음엔 당근과 섞어 시도해보세요.',160,1302);
+  RR(ctx,540,985,180,34,8,T.rd,false);
+  ctx.fillStyle=T.wh;ctx.font='800 14px sans-serif';ctx.fillText('11분 이후 집중 저하',560,1007);
+  ctx.fillStyle=T.sb;ctx.font='600 16px sans-serif';
+  ctx.fillText('식사 시작',gx,gy+30);
+  ctx.textAlign='center';ctx.fillText('11분 경과',gx+gw/2,gy+30);
+  ctx.textAlign='right';ctx.fillText('종료 (18분 40초)',gx+gw,gy+30);ctx.textAlign='left';
+
+  /* ===== Section 5: Weekly Eating Trend ===== */
+  RR(ctx,48,1192,928,126,30,T.wh,true);
+  ctx.fillStyle=T.dk;ctx.font='700 22px sans-serif';ctx.fillText('이번 주 식습관 트렌드',88,1228);
+  ctx.fillStyle=T.sb;ctx.font='500 14px sans-serif';ctx.fillText('주간 목표 달성률',88,1252);
+  /* Badge */
+  ctx.font='700 14px sans-serif';const btxt='5/7일 달성';const btw=ctx.measureText(btxt).width;
+  RR(ctx,88,1265,btw+24,28,8,'#DCFCE7',false);ctx.fillStyle='#166534';ctx.fillText(btxt,100,1284);
+
+  /* 7‑day mini bars */
+  const dys=['월','화','수','목','금','토','일'];
+  const sc=[72,85,65,90,88,42,91];
+  const bsx=380,bw=58,bgp=14,bmh=60,bby=1300;
+  for(let i=0;i<7;i++){
+    const bx2=bsx+i*(bw+bgp);
+    const bh2=sc[i]/100*bmh;
+    const today=i===6;
+    ctx.fillStyle=today?'#16A34A':sc[i]>=80?'#BBF7D0':sc[i]>=60?'#E2E8F0':'#FEE2E2';
+    RR(ctx,bx2,bby-bh2,bw,bh2,5,ctx.fillStyle,false);
+    ctx.fillStyle=today?'#166534':T.sb;ctx.font=today?'700 13px sans-serif':'500 13px sans-serif';
+    ctx.textAlign='center';ctx.fillText(dys[i],bx2+bw/2,bby+16);
+    if(today||sc[i]>=85){ctx.font='700 11px sans-serif';ctx.fillText(sc[i]+'%',bx2+bw/2,bby-bh2-6);}
+  }
+  ctx.textAlign='left';
 })();
 
 /* ===== SVG CONNECTORS ===== */
@@ -168,19 +224,37 @@ window.addEventListener('load',function(){
   const inner=document.getElementById('deviceInner');
   const svg=document.getElementById('connSvg');
   const mr=main.getBoundingClientRect();
-  const fr2=frame.getBoundingClientRect();
   const ir=inner.getBoundingClientRect();
 
-  // Canvas Y targets for each section center
-  const canvasY=[280, 510, 650, 1038, 1255];
-  const cols=['#2563EB','#16A34A','#0D9488','#D97706','#7C3AED'];
-  const scale=ir.height/1366;
+  const scaleX=ir.width/1024;
+  const scaleY=ir.height/1366;
 
-  // Marker positions (relative to main)
-  const markerYs=canvasY.map(cy=> ir.top - mr.top + cy*scale);
-  const markerX= fr2.right - mr.left + 4;
+  /* Marker positions IN canvas coordinates — placed ON actual UI sections */
+  const canvasMarkers=[
+    {x:920, y:280},   /* 1: Summary — right side of confidence score */
+    {x:420, y:640},   /* 2: Food analysis — right edge of left card */
+    {x:920, y:640},   /* 3: Meal recommendation — right edge of right card */
+    {x:920, y:1038},  /* 4: Concentration — right side */
+    {x:920, y:1255},  /* 5: AI coaching — right side */
+  ];
 
-  // Card positions
+  const cols=['#166534','#16A34A','#22C55E','#15803D','#0F766E'];
+
+  /* Map canvas coords → screen coords relative to main */
+  const markers=canvasMarkers.map(m=>({
+    x: ir.left - mr.left + m.x * scaleX,
+    y: ir.top  - mr.top  + m.y * scaleY
+  }));
+
+  /* Card positions */
+  const annotCol=document.getElementById('annotCol');
+  /* Align annot-col content to device inner top/bottom */
+  const irTopOff=ir.top-mr.top;
+  const irBotOff=ir.top-mr.top+ir.height;
+  const mainH=main.getBoundingClientRect().height;
+  annotCol.style.paddingTop=irTopOff+'px';
+  annotCol.style.paddingBottom=(mainH-irBotOff)+'px';
+
   const cards=document.querySelectorAll('.ai');
   const cardInfo=Array.from(cards).map(cd=>{
     const r=cd.getBoundingClientRect();
@@ -188,22 +262,22 @@ window.addEventListener('load',function(){
   });
 
   let s='';
-  const elbowGap=36; // horizontal gap for elbow
-
   for(let i=0;i<5;i++){
-    const mx=markerX, my=markerYs[i];
+    const mx=markers[i].x, my=markers[i].y;
     const cl=cardInfo[i].left, cy=cardInfo[i].cy;
     const col=cols[i];
 
-    // Elbow path: marker → right → vertical → right → card
-    const ex=mx+elbowGap;
-    s+=`<path d="M${mx},${my} L${ex},${my} L${ex},${cy} L${cl},${cy}" fill="none" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="5,3"/>`;
+    /* Smooth cubic bezier — no elbow */
+    const dx=cl-mx;
+    const cp1x=mx+dx*0.45, cp1y=my;
+    const cp2x=mx+dx*0.55, cp2y=cy;
+    s+=`<path d="M${mx},${my} C${cp1x},${cp1y} ${cp2x},${cp2y} ${cl},${cy}" fill="none" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="5,3"/>`;
 
-    // Numbered circle at device edge
+    /* Numbered circle on the UI */
     s+=`<circle cx="${mx}" cy="${my}" r="11" fill="${col}" stroke="#fff" stroke-width="2"/>`;
     s+=`<text x="${mx}" y="${my}" class="conn-num-text">${i+1}</text>`;
 
-    // Small endpoint dot at card
+    /* Endpoint dot at card */
     s+=`<circle cx="${cl}" cy="${cy}" r="3" fill="${col}"/>`;
   }
   svg.innerHTML=s;

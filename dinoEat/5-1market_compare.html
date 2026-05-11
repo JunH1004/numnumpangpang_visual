@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>냠냠팡팡 경쟁 서비스 비교</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-pri: #0F1A14;
+            --text-sec: #4B5563;
+            --text-muted: #6B7280;
+            --border: #D1D5DB;
+            --soft-border: #E5E7EB;
+            --main: #0F1A14;
+            --sub: #16A34A;
+            --sub-dark: #15803D;
+            --sub-soft: #DCFCE7;
+            --sub-pale: #F0FDF4;
+            --warn: #B45309;
+            --warn-soft: #FFF9E6;
+            --negative: #B91C1C;
+            --negative-soft: #FEF2F2;
+            --radius: 16px;
+            --bw: 1.2px;
+            --shadow: 0 4px 16px rgba(15,26,20,0.04);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #E5E7EB;
+            font-family: 'Pretendard', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            color: var(--text-pri);
+        }
+
+        .artboard {
+            width: 800px;
+            height: 800px;
+            background: var(--bg);
+            padding: 42px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.18;
+            letter-spacing: 0;
+        }
+
+        .comparison-card {
+            background: var(--surface);
+            border: var(--bw) solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-size: 21px;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+
+        .legend {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-mark {
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 9px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .legend-mark.yes { background: var(--sub); }
+        .legend-mark.mid { background: #F59E0B; }
+        .legend-mark.no { background: var(--negative-soft); color: var(--negative); border: 1px solid #FECACA; }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: 126px repeat(4, 1fr);
+            grid-template-rows: 84px repeat(4, 1fr);
+            gap: 6px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .corner,
+        .service-head,
+        .criteria,
+        .score-cell {
+            border: var(--bw) solid var(--soft-border);
+            border-radius: 8px;
+            min-width: 0;
+        }
+
+        .corner,
+        .criteria {
+            background: #F9FAFB;
+        }
+
+        .corner {
+            position: relative;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 800;
+            text-align: center;
+            line-height: 1.3;
+            overflow: hidden;
+        }
+
+        .corner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top right, transparent calc(50% - 0.7px), var(--soft-border) calc(50% - 0.7px), var(--soft-border) calc(50% + 0.7px), transparent calc(50% + 0.7px));
+        }
+
+        .axis-service,
+        .axis-criteria {
+            position: absolute;
+            z-index: 1;
+            white-space: nowrap;
+        }
+
+        .axis-service {
+            top: 13px;
+            right: 13px;
+        }
+
+        .axis-criteria {
+            left: 12px;
+            bottom: 13px;
+        }
+
+        .criteria {
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.24;
+            word-break: keep-all;
+        }
+
+        .service-head {
+            padding: 11px 8px;
+            background: #F9FAFB;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+        }
+
+        .service-head.focus {
+            background: var(--sub-pale);
+            border-color: var(--sub);
+            box-shadow: 0 8px 24px rgba(22,163,74,0.10);
+        }
+
+        .service-type {
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.18;
+            word-break: keep-all;
+        }
+
+        .service-name {
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 650;
+            line-height: 1.2;
+            word-break: keep-all;
+        }
+
+        .service-head.focus .service-type {
+            color: var(--sub-dark);
+        }
+
+        .service-head.focus .service-name {
+            color: var(--sub-dark);
+            font-weight: 800;
+        }
+
+        .score-cell {
+            background: #FFFFFF;
+            padding: 8px 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            text-align: center;
+        }
+
+        .score-cell.strong {
+            background: var(--sub-pale);
+            border-color: #BBF7D0;
+        }
+
+        .score-cell.partial {
+            background: var(--warn-soft);
+            border-color: #FDE68A;
+        }
+
+        .score-mark {
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .score-mark.yes {
+            background: var(--sub);
+            color: #FFFFFF;
+        }
+
+        .score-mark.mid {
+            background: #F59E0B;
+            color: #FFFFFF;
+        }
+
+        .score-mark.no {
+            background: var(--negative-soft);
+            color: var(--negative);
+            border: 1px solid #FECACA;
+        }
+
+        .score-text {
+            color: var(--text-sec);
+            font-size: 11.2px;
+            font-weight: 650;
+            line-height: 1.24;
+            word-break: keep-all;
+        }
+
+        .score-cell.strong .score-text {
+            color: var(--sub-dark);
+            font-weight: 800;
+        }
+
+        .result-card {
+            margin-top: 18px;
+            min-height: 92px;
+            background: var(--surface);
+            border: var(--bw) solid var(--sub);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: grid;
+            grid-template-columns: 104px 1fr;
+            align-items: center;
+            gap: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .result-label {
+            justify-self: start;
+            padding: 7px 12px;
+            border-radius: 6px;
+            background: var(--sub);
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .result-text {
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.35;
+            word-break: keep-all;
+        }
+
+        .result-text span {
+            color: var(--sub-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="artboard">
+        <header class="header">
+            <h1 class="title">경쟁 서비스 비교</h1>
+        </header>
+
+        <section class="comparison-card" aria-label="경쟁 서비스 비교표">
+            <div class="card-head">
+                <div class="card-title">냠냠팡팡 차별점</div>
+                <div class="legend" aria-label="비교표 범례">
+                    <span><i class="legend-mark yes">✓</i>가능</span>
+                    <span><i class="legend-mark mid">△</i>부분</span>
+                    <span><i class="legend-mark no">-</i>부족</span>
+                </div>
+            </div>
+
+            <div class="matrix">
+                <div class="corner">
+                    <span class="axis-service">서비스</span>
+                    <span class="axis-criteria">비교 기준</span>
+                </div>
+
+                <div class="service-head">
+                    <div class="service-type">식단 기록 앱</div>
+                    <div class="service-name">인핸드플러스<br>Yazio</div>
+                </div>
+                <div class="service-head">
+                    <div class="service-type">식사 콘텐츠·게임</div>
+                    <div class="service-name">핑크퐁<br>yummies</div>
+                </div>
+                <div class="service-head">
+                    <div class="service-type">행동 코칭 게임</div>
+                    <div class="service-name">포켓몬 스마일</div>
+                </div>
+                <div class="service-head focus">
+                    <div class="service-type">냠냠팡팡</div>
+                    <div class="service-name">AI 식사 코칭 게임</div>
+                </div>
+
+                <div class="criteria">실제 식사 과정 추적</div>
+                <div class="score-cell">
+                    <div class="score-mark no">-</div>
+                    <div class="score-text">섭취 결과<br>기록 중심</div>
+                </div>
+                <div class="score-cell">
+                    <div class="score-mark no">-</div>
+                    <div class="score-text">콘텐츠<br>소비 중심</div>
+                </div>
+                <div class="score-cell partial">
+                    <div class="score-mark mid">△</div>
+                    <div class="score-text">양치 행동<br>영역</div>
+                </div>
+                <div class="score-cell strong">
+                    <div class="score-mark yes">✓</div>
+                    <div class="score-text">식판·씹기<br>행동 인식</div>
+                </div>
+
+                <div class="criteria">실시간 행동 개입</div>
+                <div class="score-cell">
+                    <div class="score-mark no">-</div>
+                    <div class="score-text">사후 분석</div>
+                </div>
+                <div class="score-cell partial">
+                    <div class="score-mark mid">△</div>
+                    <div class="score-text">간접적<br>흥미 유도</div>
+                </div>
+                <div class="score-cell strong">
+                    <div class="score-mark yes">✓</div>
+                    <div class="score-text">양치 과정을<br>게임화</div>
+                </div>
+                <div class="score-cell strong">
+                    <div class="score-mark yes">✓</div>
+                    <div class="score-text">식사 행동을<br>즉시 반영</div>
+                </div>
+
+                <div class="criteria">아이의 능동적 참여</div>
+                <div class="score-cell">
+                    <div class="score-mark no">-</div>
+                    <div class="score-text">부모 입력<br>의존</div>
+                </div>
+                <div class="score-cell partial">
+                    <div class="score-mark mid">△</div>
+                    <div class="score-text">음식 친숙도<br>형성</div>
+                </div>
+                <div class="score-cell strong">
+                    <div class="score-mark yes">✓</div>
+                    <div class="score-text">놀이로 행동<br>유도</div>
+                </div>
+                <div class="score-cell strong">
+                    <div class="score-mark yes">✓</div>
+                    <div class="score-text">먹는 행동이<br>게임 보상</div>
+                </div>
+
+                <div class="criteria">식사 데이터 기반 리포트</div>
+                <div class="score-cell partial">
+                    <div class="score-mark mid">△</div>
+                    <div class="score-text">일반 식단<br>분석</div>
+                </div>
+                <div class="score-cell">
+                    <div class="score-mark no">-</div>
+                    <div class="score-text">관리 데이터<br>부족</div>
+                </div>
+                <div class="score-cell">
+                    <div class="score-mark no">-</div>
+                    <div class="score-text">식사 데이터<br>부재</div>
+                </div>
+                <div class="score-cell strong">
+                    <div class="score-mark yes">✓</div>
+                    <div class="score-text">식습관·영양<br>정밀 리포트</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-label">시장 기회</div>
+                <div class="result-text"><span>먹는 행동 자체를 게임화</span>하고, 부모에게 <span>식사 데이터를 리포트로 제공</span>하는 서비스</div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -7,16 +7,23 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <style>
         :root {
-            /* Design System Presets */
+            /* 60 */
             --bg: #F7F8FA;
             --surface: #FFFFFF;
+
+            /* 30 */
             --text-pri: #111827;
-            --text-sec: #4B5563;
+            --text-sec: #6B7280;
             --border: #D1D5DB;
-            --main: #1F3A5F;
-            --sub: #2563EB;
-            --acc1: #22C55E;
-            --acc2: #F59E0B;
+            --line: #CBD5E1;
+            --tone-1: #F3F4F6;
+            --tone-2: #E5E7EB;
+
+            /* 10 */
+            --accent: #16A34A;
+            --accent-soft: #DCFCE7;
+            --accent-deep: #15803D;
+
             --radius: 16px;
             --bw: 1.2px;
             --shadow: 0 4px 16px rgba(17,24,39,0.04);
@@ -26,6 +33,10 @@
             --arrow-line: 1.5px solid #CBD5E1;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -33,33 +44,60 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #E5E7EB; /* 아웃코스 배경 */
+            background-color: #E5E7EB;
             font-family: 'Pretendard', sans-serif;
             -webkit-font-smoothing: antialiased;
+            color: var(--text-pri);
         }
 
-        /* 800x800 Fixed Container */
         .artboard {
             width: 800px;
             height: 800px;
             background-color: var(--bg);
             padding: var(--margin);
-            box-sizing: border-box;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* Typography */
-        .title { font-size: 34px; font-weight: 700; color: var(--text-pri); margin: 0 0 8px 0; letter-spacing: -0.5px; }
-        .section { font-size: 24px; font-weight: 700; color: var(--text-pri); }
-        .step { font-size: 20px; font-weight: 600; color: var(--text-pri); }
-        .body-text { font-size: 15px; font-weight: 400; color: var(--text-sec); line-height: 1.5; }
-        .caption { font-size: 13px; font-weight: 400; color: var(--text-sec); }
+        .title {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--text-pri);
+            margin: 0 0 8px 0;
+            letter-spacing: 0;
+            line-height: 1.2;
+        }
+
+        .section {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-pri);
+        }
+
+        .step {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-pri);
+        }
+
+        .body-text {
+            font-size: 15px;
+            font-weight: 400;
+            color: var(--text-sec);
+            line-height: 1.5;
+        }
+
+        .caption {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-sec);
+        }
 
         .header-area {
             margin-bottom: var(--gap);
+            text-align: center;
         }
 
         .content-area {
@@ -69,7 +107,6 @@
             justify-content: space-between;
         }
 
-        /* Card Style */
         .card {
             background-color: var(--surface);
             border: var(--bw) solid var(--border);
@@ -80,9 +117,20 @@
             grid-template-columns: repeat(12, 1fr);
             gap: 16px;
             align-items: center;
+            position: relative;
         }
 
-        /* Left Side (Step Indicator) */
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--tone-2);
+            border-radius: 16px 16px 0 0;
+        }
+
         .card-left {
             grid-column: span 3;
             display: flex;
@@ -94,13 +142,9 @@
             font-size: 36px;
             font-weight: 800;
             line-height: 1;
+            color: var(--accent);
         }
-        
-        .letter-S { color: var(--main); }
-        .letter-T { color: var(--sub); }
-        .letter-P { color: var(--acc1); }
 
-        /* Right Side (Content) */
         .card-right {
             grid-column: span 9;
             display: flex;
@@ -112,11 +156,11 @@
             justify-content: center;
         }
 
-        /* Visual Elements inside Cards */
         .flex-row {
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .box {
@@ -126,13 +170,13 @@
             font-size: 15px;
             font-weight: 500;
             color: var(--text-pri);
-            background-color: var(--bg);
+            background-color: var(--tone-1);
         }
 
         .box-highlight {
-            border-color: var(--sub);
-            color: var(--sub);
-            background-color: rgba(37, 99, 235, 0.04);
+            border-color: #B7E4C7;
+            color: var(--accent-deep);
+            background-color: var(--accent-soft);
         }
 
         .arrow-right {
@@ -141,6 +185,7 @@
             background-color: var(--border);
             position: relative;
         }
+
         .arrow-right::after {
             content: '';
             position: absolute;
@@ -157,31 +202,35 @@
             gap: 8px;
             font-size: 15px;
             color: var(--text-sec);
+            line-height: 1.5;
         }
+
         .list-item::before {
             content: '•';
-            color: var(--border);
+            color: var(--accent);
             font-size: 18px;
             line-height: 1.2;
+            font-weight: 700;
         }
 
         .highlight-text {
-            color: var(--acc2);
+            color: var(--accent-deep);
             font-weight: 600;
         }
 
-        /* Connecting Arrows Down */
         .arrow-down-container {
             display: flex;
             justify-content: center;
             height: 24px;
         }
+
         .arrow-down-line {
             width: 0;
             height: 100%;
             border-left: var(--arrow-line);
             position: relative;
         }
+
         .arrow-down-line::after {
             content: '';
             position: absolute;
@@ -192,6 +241,16 @@
             border-top: 6px solid #CBD5E1;
         }
 
+        .card-right .body-text strong,
+        .list-item b {
+            color: var(--text-pri);
+            font-weight: 700;
+        }
+
+        .card-emphasis {
+            font-weight: 600;
+            color: var(--accent-deep);
+        }
     </style>
 </head>
 <body>
@@ -199,7 +258,6 @@
     <div class="artboard">
         <!-- Header -->
         <div class="header-area">
-            <div class="caption" style="margin-bottom: 4px; color: var(--main); font-weight: 600;">[ 그림 2 ]</div>
             <h1 class="title">냠냠팡팡 STP 세일즈 전략</h1>
             <p class="body-text">자녀 섭식 문제 해결을 위한 시장 접근 및 포지셔닝 분석</p>
         </div>
@@ -210,12 +268,12 @@
             <!-- S : Segmentation -->
             <div class="card">
                 <div class="card-left">
-                    <div class="step-letter letter-S">S</div>
+                    <div class="step-letter">S</div>
                     <div class="step">시장 세분화</div>
                     <div class="caption">Segmentation</div>
                 </div>
                 <div class="card-right">
-                    <div class="body-text" style="font-weight: 600; color: var(--main);">분석 대상 : 3~7세 아동 부모</div>
+                    <div class="body-text card-emphasis">분석 대상 : 3~7세 아동 부모</div>
                     <div class="flex-row">
                         <div class="box">디지털 매체 친숙도</div>
                         <div class="arrow-right"></div>
@@ -229,7 +287,7 @@
             <!-- T : Targeting -->
             <div class="card">
                 <div class="card-left">
-                    <div class="step-letter letter-T">T</div>
+                    <div class="step-letter">T</div>
                     <div class="step">표적 시장</div>
                     <div class="caption">Targeting</div>
                 </div>
@@ -251,17 +309,20 @@
             <!-- P : Positioning -->
             <div class="card">
                 <div class="card-left">
-                    <div class="step-letter letter-P">P</div>
+                    <div class="step-letter">P</div>
                     <div class="step">포지셔닝</div>
                     <div class="caption">Positioning</div>
                 </div>
                 <div class="card-right">
-                    <div class="body-text" style="font-weight: 600; color: var(--main); margin-bottom: 4px;">
-                        빠르고 편리한 아이 식사 지도 서비스
+                    <div class="body-text card-emphasis" style="margin-bottom: 2px; text-decoration: underline; text-underline-offset: 4px;">
+                        식사 갈등을 겪는 맞벌이·다자녀 부모를 위한 AI 실시간 식사 코칭 게임
                     </div>
-                    <div class="list-item">자녀의 <b>능동적인 식사 참여</b> 유도</div>
-                    <div class="list-item">자녀 식습관 데이터 <b>한눈에 파악</b></div>
-                    <div class="list-item">기존 수단(강압적 지도 등) 대비 <span class="highlight-text">독자적 위치 확보</span></div>
+                    <div class="body-text" style="color: var(--accent-deep); font-weight: 600; margin-bottom: 2px;">
+                        아이는 놀이로 먹고, 부모는 데이터로 관리한다
+                    </div>
+                    <div class="list-item">AI 영상 분석 기반 <b>실시간 식사 개입</b></div>
+                    <div class="list-item"><b>게이미피케이션</b>으로 아이의 능동적 참여 유도</div>
+                    <div class="list-item">개인별 식습관 데이터 기반 <b>정밀 리포트 제공</b></div>
                 </div>
             </div>
 
